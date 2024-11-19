@@ -1,0 +1,19 @@
+{% load static %}
+   
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home | 404</title>
+</head>
+<body>
+  <div class="row m-5">
+    <p><h1> Sorry ! At this moment you are not autorize to enter
+        this page <a href="{% url 'homepanel:login' %}"> Here </a> again to enjoy </h1></p>
+        
+    <img src="{% static 'assets/img/error_404.jpg' %}" alt="Not Authorized" style="max-width: 100%; height: auto;display: block; margin-left: auto;margin-right: auto;margin-top: 140px;">
+</div>
+  
+</body>
+</html>

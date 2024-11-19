@@ -1,0 +1,348 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+{% block title %}
+   ADMINPANEL | HOME
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="page-inner">
+      <div
+        class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+      >
+        
+        <!-- <div class="ms-md-auto py-2 py-md-0">
+          <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
+          <a href="#" class="btn btn-primary btn-round">Add Customer</a>
+        </div> -->
+      </div>
+      <div class="row">
+        <div class="col-sm-6 col-md-3">
+          <div class="card card-stats card-round">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-icon">
+                  <div
+                    class="icon-big text-center icon-primary bubble-shadow-small"
+                  >
+                    <i class="fas fa-users"></i>
+                  </div>
+                </div>
+                <div class="col col-stats ms-3 ms-sm-0">
+                  <div class="numbers">
+                    <p class="card-category">Students</p>
+                    <h4 class="card-title">{{ total_users }}</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="card card-stats card-round">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-icon">
+                  <div
+                    class="icon-big text-center icon-info bubble-shadow-small"
+                  >
+                    <i class="fas fa-layer-group"></i>
+                  </div>
+                </div>
+                <div class="col col-stats ms-3 ms-sm-0">
+                  <div class="numbers">
+                    <p class="card-category">Category</p>
+                    <h4 class="card-title">{{ total_category }}</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="card card-stats card-round">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-icon">
+                  <div
+                    class="icon-big text-center icon-success bubble-shadow-small"
+                  >
+                    <i class="fas fa-luggage-cart"></i>
+                  </div>
+                </div>
+                <div class="col col-stats ms-3 ms-sm-0">
+                  <div class="numbers">
+                    <p class="card-category">Courses</p>
+                    <h4 class="card-title">{{ total_course }}</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="card card-stats card-round">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-icon">
+                  <div
+                    class="icon-big text-center icon-secondary bubble-shadow-small"
+                  >
+                    <i class="far fa-check-circle"></i>
+                  </div>
+                </div>
+                <div class="col col-stats ms-3 ms-sm-0">
+                  <div class="numbers">
+                    <p class="card-category">Reviews</p>
+                    <h4 class="card-title">{{ total_reviews }}</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+      <div class="row">
+            <!-- Displaying users in a card  -->
+            <div class="col-md-4"> 
+              <div class="card card-round"> 
+                <div class="card-body" style="min-height: 510px;"> 
+                  <div class="card-head-row card-tools-still-right"> 
+                    <div class="card-title">Accounts</div> 
+                    <div class="card-tools"> 
+                      <a href="{% url 'adminpanel:profile_list' %}" class="btn btn bg-secondary">SHOW ALL</a> 
+                    </div> 
+                  </div> 
+                  <div class="card-list py-4"> 
+                    {% for profile in latest_profiles %} 
+                    <div class="item-list d-flex align-items-center mb-3"> 
+                      <div class="avatar"> 
+                        {% if profile.profile_image %} 
+                        <img src="{{ profile.profile_image.url }}" alt="{{ profile.user.username }}" class="avatar-img rounded-circle"> 
+                        {% else %} 
+                        <img src="{% static 'assets/img/blank_profile.jpg' %}" alt="Default Profile Image" class="avatar-img rounded-circle"> 
+                        {% endif %} 
+                      </div> 
+                      <div class="info-user ms-3"> 
+                        <div class="username">{{ profile.user.first_name }} {{ profile.user.last_name }}</div> 
+                        <div class="status">{{ profile.user.username }}</div> 
+                      </div> 
+                      <a href="{% url 'adminpanel:view_profile' profile.id %}" class="btn btn-icon btn-link op-8 me-1"> 
+                        <i class="far fa-eye"></i>
+                      </a>
+                    </div> 
+                    {% endfor %} 
+                  </div> 
+                </div> 
+              </div>
+            </div>
+
+        <!-- <div class="col-md-4">
+          <div class="card card-round">
+            <div class="card-body">
+              <div class="card-head-row card-tools-still-right">
+                <div class="card-title">Accounts</div>
+                <div class="card-tools">
+                  <div>
+                    <a href="{% url 'adminpanel:profile_list' %}" class="btn btn bg-secondary">SHOW ALL</a>
+                  </div>
+                </div>
+              </div>
+              <div class="card-list py-4">
+                <div class="item-list">
+                  <div class="avatar">
+                    <img
+                      src="{% static 'assets/admin/img/jm_denis.jpg' %}"
+                      alt="..."
+                      class="avatar-img rounded-circle"
+                    />
+                  </div>
+                  <div class="info-user ms-3">
+                    <div class="username">Jimmy Denis</div>
+                    <div class="status">Graphic Designer</div>
+                  </div>
+                  <button class="btn btn-icon btn-link op-8 me-1">
+                    <i class="far fa-envelope"></i>
+                  </button>
+                  <button class="btn btn-icon btn-link btn-danger op-8">
+                    <i class="fas fa-ban"></i>
+                  </button>
+                </div>
+                <div class="item-list">
+                  <div class="avatar">
+                    <span
+                      class="avatar-title rounded-circle border border-white"
+                      >CF</span
+                    >
+                  </div>
+                  <div class="info-user ms-3">
+                    <div class="username">Chandra Felix</div>
+                    <div class="status">Sales Promotion</div>
+                  </div>
+                  <button class="btn btn-icon btn-link op-8 me-1">
+                    <i class="far fa-envelope"></i>
+                  </button>
+                  <button class="btn btn-icon btn-link btn-danger op-8">
+                    <i class="fas fa-ban"></i>
+                  </button>
+                </div>
+                <div class="item-list">
+                  <div class="avatar">
+                    <img
+                      src="{% static 'assets/admin/img/talha.jpg' %}"
+                      alt="..."
+                      class="avatar-img rounded-circle"
+                    />
+                  </div>
+                  <div class="info-user ms-3">
+                    <div class="username">Talha</div>
+                    <div class="status">Front End Designer</div>
+                  </div>
+                  <button class="btn btn-icon btn-link op-8 me-1">
+                    <i class="far fa-envelope"></i>
+                  </button>
+                  <button class="btn btn-icon btn-link btn-danger op-8">
+                    <i class="fas fa-ban"></i>
+                  </button>
+                </div>
+                <div class="item-list">
+                  <div class="avatar">
+                    <img
+                      src="{% static 'assets/admin/img/chadengle.jpg' %}"
+                      alt="..."
+                      class="avatar-img rounded-circle"
+                    />
+                  </div>
+                  <div class="info-user ms-3">
+                    <div class="username">Chad</div>
+                    <div class="status">CEO Zeleaf</div>
+                  </div>
+                  <button class="btn btn-icon btn-link op-8 me-1">
+                    <i class="far fa-envelope"></i>
+                  </button>
+                  <button class="btn btn-icon btn-link btn-danger op-8">
+                    <i class="fas fa-ban"></i>
+                  </button>
+                </div>
+                <div class="item-list">
+                  <div class="avatar">
+                    <span
+                      class="avatar-title rounded-circle border border-white bg-primary"
+                      >H</span
+                    >
+                  </div>
+                  <div class="info-user ms-3">
+                    <div class="username">Hizrian</div>
+                    <div class="status">Web Designer</div>
+                  </div>
+                  <button class="btn btn-icon btn-link op-8 me-1">
+                    <i class="far fa-envelope"></i>
+                  </button>
+                  <button class="btn btn-icon btn-link btn-danger op-8">
+                    <i class="fas fa-ban"></i>
+                  </button>
+                </div>
+                <div class="item-list">
+                  <div class="avatar">
+                    <span
+                      class="avatar-title rounded-circle border border-white bg-secondary"
+                      >F</span
+                    >
+                  </div>
+                  <div class="info-user ms-3">
+                    <div class="username">Farrah</div>
+                    <div class="status">Marketing</div>
+                  </div>
+                  <button class="btn btn-icon btn-link op-8 me-1">
+                    <i class="far fa-envelope"></i>
+                  </button>
+                  <button class="btn btn-icon btn-link btn-danger op-8">
+                    <i class="fas fa-ban"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+
+
+        <div class="col-md-4"> 
+          <div class="card card-round"> 
+            <div class="card-body" style="min-height: 510px;"> 
+              <div class="card-head-row card-tools-still-right"> 
+                <div class="card-title">Courses</div> 
+                <div class="card-tools"> 
+                  <a href="{% url 'adminpanel:course_list' %}" class="btn btn bg-secondary">SHOW ALL</a> 
+                </div> 
+              </div> 
+              <div class="card-list py-4"> 
+                {% for course in latest_courses %} 
+                <div class="item-list d-flex align-items-center mb-3"> 
+                  <div class="avatar"> 
+                    {% if course.course_image %} 
+                    <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" class="avatar-img rounded-circle"> 
+                    {% else %} 
+                    <img src="{% static 'assets/img/blank_profile.jpg' %}" alt="Default Profile Image" class="avatar-img rounded-circle"> 
+                    {% endif %} 
+                  </div> 
+                  <div class="info-user ms-3"> 
+                    <div class="username">{{ course.course_name }}</div> 
+                    <div class="status">{{ course.course_category }}</div> 
+                  </div> 
+                  <a href="{% url 'adminpanel:view_course' course.id %}" class="btn btn-icon btn-link op-8 me-1"> 
+                    <i class="far fa-eye"></i>
+                  </a>
+                </div> 
+                {% endfor %} 
+              </div> 
+            </div> 
+          </div>
+        </div>
+
+
+        <div class="col-md-4">
+          <div class="card card-round">
+              <div class="card-body" style="min-height: 510px;">
+                  <div class="card-head-row card-tools-still-right">
+                      <div class="card-title">Reviews</div>
+                      <div class="card-tools">
+                          <div>
+                              <a href="{% url 'adminpanel:review_list' %}" class="btn btn bg-secondary">SHOW ALL</a>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-list py-4">
+                      {% for review in latest_reviews %}
+                      <div class="item-list">
+                          <div class="avatar">
+                              {% if review.user.profile.profile_image %}
+                              <img src="{{ review.user.profile.profile_image.url }}" alt="{{ review.user.get_full_name }}" class="avatar-img rounded-circle" />
+                              {% else %}
+                              <img src="{% static 'assets/admin/img/blank_profile.jpg' %}" alt="Default Profile" class="avatar-img rounded-circle" />
+                              {% endif %}
+                          </div>
+                          <div class="info-user ms-3">
+                              <div class="username">{{ review.user.get_full_name }}</div>
+                              <div class="status">{{ review.comment|truncatewords:10 }}</div>
+                          </div>
+                          
+                      </div>
+                      {% endfor %}
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+      
+
+
+       
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

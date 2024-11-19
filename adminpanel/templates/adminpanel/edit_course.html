@@ -1,0 +1,18 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+{% block title %}
+    ADMINPANEL | EDIT COURSE
+{% endblock %}
+
+{% block content %}
+<div class="row m-3">
+    <div class="col-12">
+       <h2 style="text-align: center;font-style: italic;font-weight: 900;">Edit Course</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p}}
+            <input type="submit" value="UPDATE" class="btn btn-primary"/>
+        </form>
+    </div>
+ </div>
+{% endblock %}

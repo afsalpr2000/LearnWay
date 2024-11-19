@@ -1,0 +1,27 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+{% block title %}
+    ADMINPANEL | GENERATE COUPONS
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <h2><i class="fas fa-ticket-alt"></i> Generate Coupon</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary mt-3" style="margin-left: 200px;">
+                    <i class="fas fa-ticket-alt"></i> Generate Coupon
+                </button>
+            </form>
+            {% if coupon_code %}
+            <div class="alert alert-success mt-3" role="alert">
+                <i class="fas fa-ticket-alt"></i> Successfully generated a coupon with code: <strong>{{ coupon_code }}</strong>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

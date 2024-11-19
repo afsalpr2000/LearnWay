@@ -1,0 +1,48 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+{% block title %}
+    Admin Panel | Review List
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">All Reviews</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Reviewer Name</th>
+                            <th>Course</th>
+                            <th>Comment</th>
+                            <th>Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for review in reviews %}
+                        <tr>
+                            <td>{{ review.user.get_full_name }}</td>
+                            <td>{{ review.course.course_name }}</td>
+                            <td>{{ review.comment }}</td>
+                            <td>
+                                {% for i in "12345" %}
+                                <i class="fas fa-star {% if forloop.counter <= review.rating %}filled{% endif %}"></i>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS for the star rating -->
+<style>
+.filled {
+    color: #ffd700;
+}
+</style>
+{% endblock %}

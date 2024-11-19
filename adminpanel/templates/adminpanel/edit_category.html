@@ -1,0 +1,15 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% block title %}
+ADMINPANEL | EDIT CATEGORY
+{% endblock %}
+{% block content %}
+<div class="row m-3">
+    <div class="col-12">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p}}
+            <input type="submit" value="UPDATE CATEGORY" class="btn btn-primary"/>
+        </form>
+    </div>
+</div>
+{% endblock %}

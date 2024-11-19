@@ -1,0 +1,227 @@
+{% extends 'studentpanel/student_base.html' %}
+{% load static %}
+{% block title %}
+    STUDENTPANEL | VIEW COURSE
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Course Title and Admin Info -->
+                    <h1>{{ course.course_name }}</h1>
+
+                    <!-- Video Player Section -->
+                    <div class="video-player mb-4">
+                        {% if selected_content %}
+                        <p class="mb-0 text-muted" style="font-size: x-large;text-align: center;font-weight: 700;"> {{ selected_content.content_name }}</p>
+                            {% if selected_content.course_video %}
+                                <div class="ratio ratio-16x9">
+                                    <video id="videoPlayer" class="w-100" controls>
+                                        <source src="{{ selected_content.course_video.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>   
+                                </div>
+                                
+                            {% else %}
+                                <p>No video selected. Please choose a video from the list.</p>
+                            {% endif %}
+                        {% else %}
+                            <p>No content available for this course.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Download Notes Section -->
+                    <div>
+                        {% if selected_content and selected_content.note %}
+                        <div class="pdf-container mb-3">
+                            <a href="{{ selected_content.note.url }}" class="btn btn-sm btn-secondary">
+                                <i class="fas fa-download"></i> Download Notes
+                            </a>
+                        </div>
+                        {% else %}
+                            <p class="text-muted">No Notes Available</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Course Description -->
+                    <div class="course-description mb-4">
+                        <h4>Course Description</h4>
+                        <p>{{ course.course_description }}</p>
+                    </div>
+
+                    <!-- Review Form or Display User Review -->
+                    <section class="reviews-section py-5">
+                        <div class="container">
+                            <h3>Your Review</h3>
+                            {% if user_review %}
+                                <div class="user-review card">
+                                    <div class="card-body">
+                                        <div class="user-rating mb-2">
+                                            {% for i in "12345" %}
+                                                <i class="fas fa-star {% if forloop.counter <= user_review.rating %}filled{% endif %}"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <p>{{ user_review.comment }}</p>
+                                        <form method="post" action="{% url 'studentpanel:delete_review' user_review.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete Review</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <form method="post" action="{% url 'studentpanel:view_course' course.id %}">
+                                    {% csrf_token %}
+                                    {{ review_form.non_field_errors }}
+                                    <div class="mb-3">
+                                        <label for="rating" class="form-label">Rating</label>
+                                        <div id="starRating" class="star-rating">
+                                            {% for i in "12345" %}
+                                                <i class="fas fa-star" data-value="{{ i }}"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <div style="display: none;">
+                                            {{ review_form.rating }}
+                                        </div>
+                                        {{ review_form.rating.errors }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ review_form.comment.label_tag }}
+                                        {{ review_form.comment }}
+                                        {{ review_form.comment.errors }}
+                                    </div>
+                                    <button type="submit" name="submit_review" class="btn btn-success">Submit Review</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <!-- Course Contents -->
+            <div class="course-contents mb-4">
+                <h4>Course Contents</h4>
+                {% if has_content %}
+                <div class="content-list" style="max-height: 250px; overflow-y: auto; background-color: #ffffff;">
+                    <ul class="list-group">
+                        {% for content in contents %}
+                        <li class="list-group-item {% if content == selected_content %} active {% endif %}" style="background-color: #ffffff;">
+                            <a href="{% url 'studentpanel:view_course_content' course.id content.id %}" style="color: #000000;">{{ content.content_name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% else %}
+                <p>No contents available for this course.</p>
+                {% endif %}
+            </div>
+
+            <!-- Comments Section -->
+            <section class="comments-section py-5">
+                <div class="container">
+                    <h4>Comments</h4>
+                    <form method="post" action="{% url 'studentpanel:view_course' course.id %}" id="commentForm">
+                        {% csrf_token %}
+                        {{ comment_form.non_field_errors }}
+                        <div class="mb-3">
+                            {{ comment_form.message.label_tag }}
+                            {{ comment_form.message }}
+                            {{ comment_form.message.errors }}
+                        </div>
+                        <button type="submit" name="submit_comment" class="btn btn-primary mt-2">Post Comment</button>
+                    </form>
+
+                    <!-- Comments List -->
+                    <div class="comments-list mt-3" id="commentsList" style="max-height: 300px; overflow-y: auto;">
+                        <ul class="list-group">
+                            {% for comment in comments %}
+                                <li class="list-group-item p-2">
+                                    <div class="d-flex align-items-center">
+                                        {% if comment.user.profile.profile_image %}
+                                            <img src="{{ comment.user.profile.profile_image.url }}" alt="{{ comment.user.get_full_name }}" class="comment-user-img" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+                                        {% else %}
+                                            <img src="{% static 'assets/admin/img/blank_profile.jpg' %}" alt="Default Profile" class="comment-user-img" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+                                        {% endif %}
+                                        <div>
+                                            <p>{{ comment.user.username }}</p>
+                                            <strong>{{ comment.message }}</strong><br>
+                                            <small class="text-muted">{{ comment.created_at|date:"F j, Y, g:i a" }}</small>
+                                        </div>
+                                        {% if comment.user == request.user %}
+                                            <div class="ms-auto">
+                                                <a href="{% url 'studentpanel:delete_comment' comment.id %}" class="btn btn-danger btn-sm">Delete</a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to handle the star rating and pause video by default -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.star-rating i');
+    const ratingInput = document.querySelector('input[name="rating"]');
+
+    // Hide the number input
+    ratingInput.style.display = 'none';
+
+    // Handle star rating click
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const rating = this.getAttribute('data-value');
+            ratingInput.value = rating;
+
+            // Reset all stars
+            stars.forEach(s => s.classList.remove('selected'));
+
+            // Highlight selected stars
+            for (let i = 0; i < rating; i++) {
+                stars[i].classList.add('selected');
+            }
+        });
+    });
+
+    // Pause video by default
+    const video = document.querySelector('video');
+    if (video) {
+        video.pause();
+    }
+});
+
+
+
+
+
+</script>
+
+<!-- CSS for the star rating and filled stars -->
+<style>
+.star-rating {
+    font-size: 1.5em;
+    color: #ddd;
+    cursor: pointer;
+}
+
+.star-rating i.selected,
+.user-rating i.filled {
+    color: #ffd700;
+}
+
+input[name="rating"] {
+    display: none;
+}
+
+
+</style>
+{% endblock %}

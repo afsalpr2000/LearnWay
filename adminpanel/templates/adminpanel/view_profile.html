@@ -1,0 +1,53 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+{% block title %}View Profile | Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="flex-grow-1">
+                        <h2 style="font-style: italic; font-weight: 900;">{{ profile.user.first_name }} {{ profile.user.last_name }}</h2>
+                        <p><i class="fas fa-user"></i> <strong>Username:</strong> {{ profile.user.username }}</p>
+                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> {{ profile.user.email }}</p>
+                        <p><i class="fas fa-phone"></i> <strong>Phone:</strong> {{ profile.phone }}</p>
+                        <p><i class="fas fa-info-circle"></i> <strong>Status:</strong> {% if profile.is_blocked %}<span class="badge bg-danger">Blocked</span>{% else %}<span class="badge bg-success">Active</span>{% endif %}</p>
+                    </div>
+                    <div class="profile-image-container" style="flex-shrink: 0;">
+                        {% if profile.profile_image %}
+                        <img src="{{ profile.profile_image.url }}" alt="{{ profile.user.username }}" class="img-fluid rounded" style="max-width: 300px;">
+                        {% else %}
+                        <img src="{% static 'assets/img/blank_profile.jpg' %}" alt="Default Profile Image" class="img-fluid rounded" style="max-width: 300px;">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="{% url 'adminpanel:profile_list' %}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Profiles</a>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+                <h4 class="mb-3" style="font-style: italic; font-weight: 700;">Courses Enrolled</h4>
+                {% if enrollments %}
+                <ul class="list-group list-group-flush">
+                    {% for enrollment in enrollments %}
+                    <li class="list-group-item">
+                        <i class="fas fa-book"></i> {{ enrollment.course.course_name }}
+                        <span class="badge 
+                              {% if enrollment.status == 'on_progress' %} bg-primary
+                              {% elif enrollment.status == 'completed' %} bg-success
+                              {% endif %} 
+                              float-right">{{ enrollment.get_status_display }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No courses enrolled.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

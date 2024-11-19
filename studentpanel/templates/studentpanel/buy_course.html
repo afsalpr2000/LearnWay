@@ -1,0 +1,81 @@
+{% extends 'studentpanel/student_base.html' %}
+{% load static %}
+{% block title %}
+   STUDENTPANEL | COURSE DETAILS
+{% endblock %}
+
+{% block content %}
+    <!-- bradcam_area_start -->
+    <div class="bradcam_area breadcam_bg overlay2">
+        <h3>{{ course.course_name }}</h3>
+    </div>
+    <!-- bradcam_area_end -->
+
+    <div class="course_details">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 course_details_left">
+                    <h2>{{ course.course_name }}</h2>
+                    <p>{{ course.course_description }}</p>
+                    
+                    <!-- Content Count Card -->
+                    <div class="content-count-card card mt-4">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title">Course Contents</h5>
+                                <p class="card-text">{{ course.coursecontent_set.all|length }} items</p>
+                            </div>
+                            <div>
+                                <i class="fas fa-book-open fa-3x text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-lg-4 course_details_right">
+                    {% if course.course_image %}
+                    <img src="{{ course.course_image.url }}" alt="{{ course.course_name }}" class="img-fluid">
+                    {% else %}
+                    <img src="{% static 'assets/img/default_course.jpg' %}" alt="Default Course Image" class="img-fluid">
+                    {% endif %}
+
+                    <div class="course_price mt-3">
+                        <h4>Price: ${{ course.course_price }}</h4>
+                    </div>
+
+                    {% if is_enrolled %}
+                    <div class="alert alert-success mt-3" role="alert">
+                        You are already enrolled in this course.
+                    </div>
+                    {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary mt-3">Redeem Coupon & Enroll</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer footer_bg_1">
+        <div class="copy-right_text">
+            <div class="container">
+                <div class="footer_border"></div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <p class="copy_right text-center">
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer -->
+
+{% endblock %}
